@@ -2,6 +2,10 @@ const taskForm = document.getElementById("task-form");
 const taskInput = document.getElementById("task-input");
 const taskList = document.getElementById("task-list");
 const taskCount = document.getElementById("task-count");
+//my stuff 
+const todayDate = document.getElementById("todaysdate");
+const completedCount = document.getElementById("complete_counter");
+const clearButton = document.getElementById("clearall");
 
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
@@ -60,6 +64,14 @@ function showTasks() {
   });
 
   taskCount.textContent = tasks.length + (tasks.length === 1 ? " task" : " tasks");
+
+  //summing the tasks
+  let completedTotal = 0;
+  tasks.forEach(function(task) {
+    if (task.completed) completedTotal++;
+  });
+  completedCount.textContent = completedTotal + " completed";
+  clearButton.disabled = tasks.length === 0;
 }
 
 taskForm.addEventListener("submit", function(event) {
@@ -71,6 +83,18 @@ taskForm.addEventListener("submit", function(event) {
   taskInput.value = "";
   saveTasks();
   showTasks();
+});
+
+// Show today's date feature
+todayDate.textContent = new Date().toLocaleDateString();
+
+// Clear every task simply
+clearButton.addEventListener("click", function() {
+  if (confirm("Clear all tasks?")) {
+    tasks = [];
+    saveTasks();
+    showTasks();
+  }
 });
 
 showTasks();
